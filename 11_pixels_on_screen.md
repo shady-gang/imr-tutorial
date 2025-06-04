@@ -65,7 +65,7 @@ swapchain.renderFrameSimplified([&](imr::Swapchain::SimplifiedRenderContext& fra
 ```
 
 The `SimplifiedRenderContext` object contains two things of use for us, a reference to an `imr::Image` and a _command buffer_.
-The image object the a window-sized color image that we'll be rendering to define the window contents.
+The image object is a window-sized color image that we'll be rendering to define the window contents.
 `imr::Image` is an abstraction over Vulkan's `VkImage` object and comes with various convenience features.
 We can get the underlying `VkImage` by calling `imr::Image::handle()`.
 

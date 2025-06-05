@@ -132,6 +132,22 @@ See [GLSL docs](https://www.khronos.org/opengl/wiki/Data_Type_(GLSL)#Swizzling) 
 
 One last detail is that `imageStore` wants an `ivec2` (signed) instead of an `uvec2`, so we cast the value using the `ivec2` constructor.
 
+## Binding the Image to the Shader
+
+We have defined the `renderTarget` variable as part of our shader interface with the host, which means we need to actually provide the image as an "argument" to the shader from the host side, between the `vkCmdBindPipeline` call and the `vkCmdDispatch`.
+
+IMR provides a `DescriptorBindHelper` class to assist with the resource binding process: you simply request a new helper from the `imr::ComputeShader` object, use the `set` and `binding` numbers associated with `renderTarget` to call the `set_storage_image` method.
+Then, we need to "commit" the changes to the command buffer, and after that any dispatches will use the resources we've set.
+
+```cpp
+auto shader_bind_helper = shader.create_bind_helper();
+shader_bind_helper->set_storage_image(0, 0, image);
+shader_bind_helper->commit(cmdbuf);
+```
+
+The full details of binding is, again, a complicated topic left for later.
+For now we can rest on our laurels and enjoy a beautiful yellow screen:
+
 ![](images/12_compute_shader.png)
 
 Very impressive... but we're not quite done.
